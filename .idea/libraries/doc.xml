@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="doc">
+    <CLASSES />
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/CS361FAdocs.zip!/doc" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
