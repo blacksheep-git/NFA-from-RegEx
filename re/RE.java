@@ -5,11 +5,12 @@ import fa.nfa.NFA;
 import fa.nfa.NFAState;
 
 /**
- * TODO//
+ * Constructs an NFA from a regular expression
+ * (RegEx) by parsing.
  */
 public class RE implements REInterface {
 
-	private String regEx; //regular expression string - access assumed by other methods
+	private String re; //regular expression string - access assumed by other methods
 	private int stateCount = 0;
 
 	private final char STAR = '*';
@@ -21,10 +22,10 @@ public class RE implements REInterface {
 
 	/**
 	 * Construcor
-	 * @param regEx regular expression as string type
+	 * @param re regular expression as string type
 	 */
-	public RE(String regEx) {
-		this.regEx = regEx;
+	public RE(String re) {
+		this.re = re;
 	}
 
 	/**
@@ -68,14 +69,12 @@ public class RE implements REInterface {
 	 */
 	private NFA base() { //TODO: refactor code
 		NFA nfa;
-		switch (peek()) {
-		case START_PRE:
+
+		if(peek() == START_PRE){ //check redEx for specified precedence
 			eat(START_PRE);
 			nfa = getNFA();
 			eat(CLOSE_PRE);
-			return nfa;
-
-		default:
+		} else{
 			char c = next();
 
 			nfa = new NFA();
@@ -87,9 +86,9 @@ public class RE implements REInterface {
 			nfa.addFinalState(finalState);
 
 			nfa.addTransition(startState, c, finalState);
-
-			return nfa;
 		}
+
+		return nfa;
 	}
 
 	/**
@@ -120,17 +119,16 @@ public class RE implements REInterface {
 	 */
 	private NFA term() { //TODO: refactor code
 		NFA factor = new NFA();
+		factor.addStartState(String.valueOf(stateCount++));
+		factor.addFinalState(String.valueOf(stateCount));
+		factor.addTransition(factor.getStartState().getName(), E, String.valueOf(stateCount));
+		stateCount++;
 
-		factor.addStartState(Integer.toString(stateCount++));
-		String finalstate = Integer.toString(stateCount);
-		factor.addFinalState(Integer.toString(stateCount++));
-		factor.addTransition(factor.getStartState().getName(), E, finalstate);
-
-		while (more() && peek() != CLOSE_PRE && peek() != OR) {
+		while (more() && peek() != CLOSE_PRE && peek() != OR) { //as suggested in https://matt.might.net/articles/parsing-regex-with-recursive-descent/
 			NFA nextFactor = factor();
 			factor.addAbc(nextFactor.getABC());
 
-			for(State s:factor.getFinalStates()){
+			for(State s : factor.getFinalStates()){ //for each final state
 				NFAState state = (NFAState)s;
 				state.setNonFinal();
 				state.addTransition( E, (NFAState)nextFactor.getStartState());
@@ -147,19 +145,16 @@ public class RE implements REInterface {
 	 *  Returns the next item of input without consuming it
 	 */
 	private char peek() {
-		return regEx.charAt(0);
+		return re.charAt(0);
 	}
 
 	/**
 	 * As suggested on https://matt.might.net/articles/parsing-regex-with-recursive-descent/
 	 * Consumes the next item of input, failing if not equal to item
 	 */
-	private void eat(char c) {
-		if (peek() == c){
-			regEx = regEx.substring(1);
-		}else{
-			throw new RuntimeException("Expected: " + c + "; got: " + peek());
-		}
+	private char eat(char c) {
+		re = re.substring(1);
+		return c;
 	}
 
 	/**
@@ -167,9 +162,7 @@ public class RE implements REInterface {
 	 * Returns the next item of input and consumes it
 	 */
 	private char next() {
-		char c = peek();
-		eat(c);
-		return c;
+		return eat(peek());
 	}
 
 	/**
@@ -177,6 +170,6 @@ public class RE implements REInterface {
 	 * The nonstandard primitve more() checks if there is more input available.
 	 */
 	private boolean more() {
-		return regEx.length() > 0;
+		return re.length() > 0;
 	}
 }
