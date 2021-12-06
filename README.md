@@ -1,4 +1,4 @@
-# Project 3: Project 3 (Regular Expressions)
+# Project 3 (Regular Expressions)
 
  * Authors: Mateo Ortegon and Quinn Shultz
  * Class: CS361
@@ -6,15 +6,16 @@
 
 ## Overview
 
-We implemented two classes that model an instance of a nondeterministicfinite 
-automaton (NFA) including a method that computes an equivalent DFA to a NFA’s instance.
+In this project, we were asked to write code that constructs an NFA for a given regular expression
+(RegEx). We pased the RegEx using the suggested recursive
+descent parsing algorithm
 
 ## Compiling and Using
 
 To run the program, execute the following commands:
 ```bash
-javac fa/nfa/NFADriver.java
-java fa.nfa.NFADriver ./tests/<TEST_NAME>.txt
+javac  javac -cp ".:./CS361FA.jar" re/REDriver.java
+java  java -cp ".:./CS361FA.jar" re.REDriver ./tests/<TEST_NAME>.txt
 ```
 
 ## Specification
@@ -30,37 +31,27 @@ java fa.nfa.NFADriver ./tests/<TEST_NAME>.txt
 |-- CS361FAdocs.zip
 ```
 ## Discussion
-By far, the largest piece of the puzzle was the getDFA() method. It helps that the
-algorithm for transforming an NFA to DFA is fairly translatable as pseudocode from 
-class notes to code, but this was still a huge pain. 
+By far, the largest piece of the puzzle was the getNFA() method. The algorithm 
+outlined in the [suggested resource](https://matt.might.net/articles/parsing-regex-with-recursive-descent/) was incredibly useful.
 
-The part that is always a challenge with these assignments is sticking to the 
-guidelines of "use Set data structure", and "you must use these methods and 
-implement these interfaces" and "you can't modify any of the code here". For 
-example, the very first bit of effort was spent figuring out how the NFADriver 
-worked.
+Our code ended up looking very similar to the code on the example - but we made an
+effort to write as much of our own code as possible. That said, there was utility in 
+staying consistent with the naming convention for sanity checking - so some of the method
+and variable names are identical.
 
-Another challenge was implementing the eClosure method recursively. To keep eClosure
-one public method we had to create sets as instance variables that were accessible 
-to all recursive calls. The issue was that after recursion had returned a value we
-needed to clear the contents of the instance variable sets so that they would be 
-empty for future calls. Alternatively, one could split the eClosure method into two,
-one that creates the set variables that are only accessible during the lifetime of the
-method call. And another that performs the recursion. We chose to keep everything as 
-one method as it seemed more straightforward.
+Another challenge with this specific project was having to use the .jar file, since we initially
+couldn't look at the source code, to see how we could interact with it. Here, two things helped: 1) We were fairly
+comfortable with our NFA implementation from our last project, so we referenced this initially. 2) We were able to
+decompile the .jar file and look at the source code directly.
 
 ## Testing
 For testing, we ran each of the input test files included under the 'tests' 
 folder. We then compared our program's output to the sample output provided
-in P2 handout. We went as far as ensuring the order of our programs output
+in P3 handout. We went as far as ensuring the order of our programs output
 matched the sample output perfectly.
 
 ## Sources Used
-* [LinkedHashMap](https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html)
-* [LinkedHashSet](https://docs.oracle.com/javase/7/docs/api/java/util/LinkedHashSet.html)
-* [HashSet](https://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html)
-* [BFS](https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/)
-* [DFS](https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/)
+* [Recursive Descent Algorithm](https://matt.might.net/articles/parsing-regex-with-recursive-descent/)
 * [Relaxing Music](https://www.youtube.com/watch?v=5qap5aO4i9A)
 * [README Template](https://raw.githubusercontent.com/BoiseState/CS121-resources/master/projects/README_TEMPLATE.md)
 * [Mark Down](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links)

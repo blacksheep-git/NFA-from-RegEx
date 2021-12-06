@@ -10,7 +10,7 @@ import fa.nfa.NFAState;
  */
 public class RE implements REInterface {
 
-	private String re; 				//regular expression string - access assumed by other methods
+	private String re; 				//regular expression string - access assumed by other methods. As suggested on https://matt.might.net/articles/parsing-regex-with-recursive-descent/
 	private int stateCount = 0;
 
 	private final char STAR = '*';
